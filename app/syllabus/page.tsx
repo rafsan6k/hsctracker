@@ -45,7 +45,7 @@ export default function SyllabusPage() {
       fIcon,
       fDate || null
     );
-    setExpanded(s?.id);
+    setExpanded(s?.id ?? null);
   }
 
   reset();
