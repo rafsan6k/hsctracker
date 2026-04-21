@@ -33,8 +33,8 @@ export default function SyllabusPage() {
       updateSubject(editId, { name: fName.trim(), color: fColor, icon: fIcon, examDate: fDate || null });
       setEditId(null);
     } else {
-      const s = addSubject(fName.trim(), fColor, fIcon, fDate || null);
-      setExpanded(s.id);
+     const s = await addSubject(fName.trim(), fColor, fIcon, fDate || null);
+  setExpanded(s?.id);
     }
     reset(); setShowModal(false);
   };
