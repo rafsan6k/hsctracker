@@ -27,17 +27,30 @@ export default function SyllabusPage() {
 
   const reset = () => { setFName(''); setFColor(SUBJECT_COLORS[0]); setFIcon(SUBJECT_ICONS[0].key); setFDate(''); };
 
-  const save = () => {
-    if (!fName.trim()) return;
-    if (editId) {
-      updateSubject(editId, { name: fName.trim(), color: fColor, icon: fIcon, examDate: fDate || null });
-      setEditId(null);
-    } else {
-     const s = await addSubject(fName.trim(), fColor, fIcon, fDate || null);
-  setExpanded(s?.id);
-    }
-    reset(); setShowModal(false);
-  };
+  const save = async () => {
+  if (!fName.trim()) return;
+
+  if (editId) {
+    updateSubject(editId, {
+      name: fName.trim(),
+      color: fColor,
+      icon: fIcon,
+      examDate: fDate || null,
+    });
+    setEditId(null);
+  } else {
+    const s = await addSubject(
+      fName.trim(),
+      fColor,
+      fIcon,
+      fDate || null
+    );
+    setExpanded(s?.id);
+  }
+
+  reset();
+  setShowModal(false);
+};
 
   const openEdit = (id: string) => {
     const s = subjects.find((x) => x.id === id);
