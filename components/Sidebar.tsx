@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStudyStore } from '@/lib/store';
+import { useAuth } from './AuthProvider';
 
 const navItems = [
   { href: '/', icon: 'dashboard', label: 'Dashboard' },
@@ -15,6 +16,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const profile = useStudyStore((s) => s.profile);
   const streak = useStudyStore((s) => s.streak);
+  const { signOut } = useAuth();
 
   return (
     <>
@@ -91,25 +93,41 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        {/* Profile */}
-        <Link href="/profile" className={`nav-link ${pathname === '/profile' ? 'active' : ''}`}
-              style={{ marginTop: 'auto' }}>
-          <div style={{
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #8B5CF6, #a078ff)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 14,
-            fontWeight: 700,
-            color: 'white',
-          }}>
-            {profile.displayName.charAt(0).toUpperCase()}
-          </div>
-          <span>{profile.displayName}</span>
-        </Link>
+        {/* Profile & Logout */}
+        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <Link href="/profile" className={`nav-link ${pathname === '/profile' ? 'active' : ''}`}>
+            <div style={{
+              width: 24,
+              height: 24,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #8B5CF6, #a078ff)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 11,
+              fontWeight: 700,
+              color: 'white',
+            }}>
+              {profile.displayName.charAt(0).toUpperCase()}
+            </div>
+            <span>{profile.displayName}</span>
+          </Link>
+          <button 
+            onClick={() => signOut()}
+            className="nav-link" 
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer', 
+              width: '100%', 
+              textAlign: 'left',
+              color: '#ef4444' 
+            }}
+          >
+            <span className="material-symbols-rounded">logout</span>
+            Sign Out
+          </button>
+        </div>
       </aside>
 
       {/* Mobile Bottom Nav */}
@@ -131,6 +149,14 @@ export default function Sidebar() {
           <span className="material-symbols-rounded">person</span>
           Profile
         </Link>
+        <button 
+          onClick={() => signOut()}
+          className="mobile-nav-link"
+          style={{ background: 'none', border: 'none', color: '#ef4444' }}
+        >
+          <span className="material-symbols-rounded">logout</span>
+          Exit
+        </button>
       </nav>
     </>
   );

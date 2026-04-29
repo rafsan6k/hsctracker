@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
+import AuthProvider from "@/components/AuthProvider";
+import AppShell from "@/components/AppShell";
 
 export const metadata: Metadata = {
   title: "StudyFlow — Smart Study Tracker",
@@ -23,17 +24,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet" />
       </head>
       <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Sidebar />
-        <main className="main-content" style={{
-          marginLeft: 260,
-          flex: 1,
-          minHeight: '100vh',
-          padding: '32px',
-        }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto', width: '100%' }}>
-            {children}
-          </div>
-        </main>
+        <AuthProvider>
+          <AppShell>{children}</AppShell>
+        </AuthProvider>
       </body>
     </html>
   );
