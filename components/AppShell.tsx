@@ -18,15 +18,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   // Redirect unauthenticated users to login
   useEffect(() => {
-    if (!loading && !user && !isLoginPage) {
-      router.push('/login');
+    // Only redirect if we are NOT loading AND we definitely have no user
+    if (!loading && user === null && !isLoginPage) {
+      router.replace('/login');
     }
   }, [user, loading, isLoginPage, router]);
 
   // Redirect authenticated users away from login
   useEffect(() => {
-    if (!loading && user && isLoginPage) {
-      router.push('/');
+    if (!loading && user !== null && isLoginPage) {
+      router.replace('/');
     }
   }, [user, loading, isLoginPage, router]);
 

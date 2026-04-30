@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -38,3 +39,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 =======
 # hsctracker
 >>>>>>> 94e76e40cd714bb948d296cbf24515f3d0afce69
+=======
+# hsctracker
+>>>>>>> 200a193806601f7bfbd3dd28f220ecd62f74ff40

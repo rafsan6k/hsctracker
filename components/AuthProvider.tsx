@@ -30,6 +30,12 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const supabase = getSupabase();
 
   useEffect(() => {
+    if (!supabase || !supabase.auth) {
+      console.warn('Supabase client not initialized. Check environment variables.');
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
     const checkUser = async () => {
       try {

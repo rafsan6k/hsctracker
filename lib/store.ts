@@ -78,56 +78,62 @@ export const useStudyStore = create<StudyStore>()((set, get) => ({
 
   // ── Load all data for a user from Supabase ──
   initForUser: async (userId: string) => {
-    const sb = getSupabase();
+    try {
+      const sb = getSupabase();
 
-    const [subRes, chRes, tgRes, bgRes, logRes, profRes] = await Promise.all([
-      sb.from('subjects').select('*').eq('user_id', userId).order('sort_order'),
-      sb.from('chapters').select('*').eq('user_id', userId).order('sort_order'),
-      sb.from('targets').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
-      sb.from('badges').select('*').eq('user_id', userId),
-      sb.from('completion_logs').select('*').eq('user_id', userId),
-      sb.from('profiles').select('*').eq('id', userId).single(),
-    ]);
+      const [subRes, chRes, tgRes, bgRes, logRes, profRes] = await Promise.all([
+        sb.from('subjects').select('*').eq('user_id', userId).order('sort_order'),
+        sb.from('chapters').select('*').eq('user_id', userId).order('sort_order'),
+        sb.from('targets').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
+        sb.from('badges').select('*').eq('user_id', userId),
+        sb.from('completion_logs').select('*').eq('user_id', userId),
+        sb.from('profiles').select('*').eq('id', userId).single(),
+      ]);
 
-    const mapSubject = (r: Record<string, unknown>): Subject => ({
-      id: r.id as string, name: r.name as string, color: r.color as string, icon: r.icon as string,
-      examDate: r.exam_date ? String(r.exam_date) : null,
-      createdAt: r.created_at as string, sortOrder: (r.sort_order as number) || 0,
-    });
+      const mapSubject = (r: Record<string, unknown>): Subject => ({
+        id: r.id as string, name: r.name as string, color: r.color as string, icon: r.icon as string,
+        examDate: r.exam_date ? String(r.exam_date) : null,
+        createdAt: r.created_at as string, sortOrder: (r.sort_order as number) || 0,
+      });
 
-    const mapChapter = (r: Record<string, unknown>): Chapter => ({
-      id: r.id as string, subjectId: r.subject_id as string, name: r.name as string,
-      chapterNumber: (r.chapter_number as number) || 1,
-      status: (r.status as Chapter['status']) || 'not_started',
-      completedAt: r.completed_at ? String(r.completed_at) : null,
-      createdAt: r.created_at as string, sortOrder: (r.sort_order as number) || 0,
-    });
+      const mapChapter = (r: Record<string, unknown>): Chapter => ({
+        id: r.id as string, subjectId: r.subject_id as string, name: r.name as string,
+        chapterNumber: (r.chapter_number as number) || 1,
+        status: (r.status as Chapter['status']) || 'not_started',
+        completedAt: r.completed_at ? String(r.completed_at) : null,
+        createdAt: r.created_at as string, sortOrder: (r.sort_order as number) || 0,
+      });
 
-    const mapTarget = (r: Record<string, unknown>): Target => ({
-      id: r.id as string, type: r.type as Target['type'], label: r.label as string,
-      targetValue: r.target_value as number, subjectId: r.subject_id ? String(r.subject_id) : null,
-      startDate: r.start_date as string, endDate: r.end_date as string, createdAt: r.created_at as string,
-    });
+      const mapTarget = (r: Record<string, unknown>): Target => ({
+        id: r.id as string, type: r.type as Target['type'], label: r.label as string,
+        targetValue: r.target_value as number, subjectId: r.subject_id ? String(r.subject_id) : null,
+        startDate: r.start_date as string, endDate: r.end_date as string, createdAt: r.created_at as string,
+      });
 
-    const prof = profRes.data;
+      const prof = profRes.data;
 
-    set({
-      userId,
-      initialized: true,
-      subjects: (subRes.data || []).map(mapSubject),
-      chapters: (chRes.data || []).map(mapChapter),
-      targets: (tgRes.data || []).map(mapTarget),
-      badges: (bgRes.data || []).map((r: Record<string, unknown>) => ({ key: r.badge_key as Badge['key'], earnedAt: r.earned_at as string })),
-      completionLogs: (logRes.data || []).map((r: Record<string, unknown>) => ({ chapterId: r.chapter_id as string, completedAt: r.completed_at as string })),
-      profile: prof ? {
-        displayName: (prof.display_name as string) || 'Student',
-        examLabel: (prof.exam_label as string) || '',
-        dailyReminderTime: '20:00',
-        theme: 'dark',
-      } : { ...defaultProfile },
-      streak: prof ? ((prof.streak as number) || 0) : 0,
-      lastActiveDate: prof?.last_active_date ? String(prof.last_active_date) : null,
-    });
+      set({
+        userId,
+        initialized: true,
+        subjects: (subRes.data || []).map(mapSubject),
+        chapters: (chRes.data || []).map(mapChapter),
+        targets: (tgRes.data || []).map(mapTarget),
+        badges: (bgRes.data || []).map((r: Record<string, unknown>) => ({ key: r.badge_key as Badge['key'], earnedAt: r.earned_at as string })),
+        completionLogs: (logRes.data || []).map((r: Record<string, unknown>) => ({ chapterId: r.chapter_id as string, completedAt: r.completed_at as string })),
+        profile: prof ? {
+          displayName: (prof.display_name as string) || 'Student',
+          examLabel: (prof.exam_label as string) || '',
+          dailyReminderTime: '20:00',
+          theme: 'dark',
+        } : { ...defaultProfile },
+        streak: prof ? ((prof.streak as number) || 0) : 0,
+        lastActiveDate: prof?.last_active_date ? String(prof.last_active_date) : null,
+      });
+    } catch (error) {
+      console.error('Failed to initialize store for user:', error);
+      // Still set initialized to true to prevent perma-loading, but maybe show an error UI elsewhere
+      set({ initialized: true });
+    }
   },
 
   reset: () => {
