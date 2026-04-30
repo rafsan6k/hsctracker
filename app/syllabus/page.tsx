@@ -14,12 +14,27 @@ export default function Page() {
 
       const session: Session | null = result.data.session;
 
+<<<<<<< HEAD
       setUser(session?.user ?? null);
       setLoading(false);
     };
+=======
+  const save = async () => {
+    if (!fName.trim()) return;
+    if (editId) {
+      await updateSubject(editId, { name: fName.trim(), color: fColor, icon: fIcon, examDate: fDate || null });
+      setEditId(null);
+    } else {
+      const s = await addSubject(fName.trim(), fColor, fIcon, fDate || null);
+      if (s) setExpanded(s.id);
+    }
+    reset(); setShowModal(false);
+  };
+>>>>>>> 6dd33cb (Updated multiple components and config)
 
     getSession();
 
+<<<<<<< HEAD
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
@@ -45,6 +60,13 @@ export default function Page() {
       </div>
     );
   }
+=======
+  const addCh = async (sid: string) => {
+    if (!newChName.trim()) return;
+    await addChapter(sid, newChName.trim());
+    setNewChName('');
+  };
+>>>>>>> 6dd33cb (Updated multiple components and config)
 
   return (
     <div style={{ padding: 20 }}>

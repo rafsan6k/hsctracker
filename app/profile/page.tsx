@@ -32,12 +32,12 @@ export default function ProfilePage() {
 
   const overall = getOverallProgress();
 
-  const saveName = () => {
-    if (name.trim()) updateProfile({ displayName: name.trim() });
+  const saveName = async () => {
+    if (name.trim()) await updateProfile({ displayName: name.trim() });
   };
 
-  const saveLabel = () => {
-    updateProfile({ examLabel: examLabel.trim() });
+  const saveLabel = async () => {
+    await updateProfile({ examLabel: examLabel.trim() });
   };
 
   return (
@@ -116,7 +116,7 @@ export default function ProfilePage() {
       {/* Data */}
       <div className="glass-card-static animate-fade-up" style={{ padding: 24, animationDelay: '240ms' }}>
         <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12 }}>Data & Privacy</h3>
-        <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 16 }}>Your data is stored locally on this device. Nothing is sent to any server.</p>
+        <p style={{ fontSize: 13, color: 'var(--color-text-muted)', marginBottom: 16 }}>Your data is securely synced to your cloud account. You can access it from any device by signing in.</p>
         <button className="btn-ghost" onClick={() => {
           const data = localStorage.getItem('studyflow-storage');
           if (data) {

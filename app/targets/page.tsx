@@ -45,11 +45,11 @@ export default function TargetsPage() {
     return { start: s.toISOString().split('T')[0], end: e.toISOString().split('T')[0] };
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const val = parseInt(tValue) || 5;
     if (val <= 0) return;
     const { start, end } = getDateRange(tType);
-    addTarget({
+    await addTarget({
       type: tType,
       label: tLabel.trim() || `${tType.charAt(0).toUpperCase() + tType.slice(1)} Target`,
       targetValue: val,
@@ -108,9 +108,9 @@ export default function TargetsPage() {
             <div style={{ fontSize: 13, fontWeight: 600, color: '#d0bcff', marginBottom: 2 }}>Suggested Daily Target</div>
             <div style={{ fontSize: 13, color: 'var(--color-text-secondary)' }}>Complete <strong>{suggestedDaily}</strong> chapters/day to finish before your exam ({daysUntilExam} days left).</div>
           </div>
-          <button className="btn-primary" style={{ fontSize: 12, padding: '8px 14px' }} onClick={() => {
+          <button className="btn-primary" style={{ fontSize: 12, padding: '8px 14px' }} onClick={async () => {
             const { start, end } = getDateRange('daily');
-            addTarget({ type: 'daily', label: 'Daily Target', targetValue: suggestedDaily, subjectId: null, startDate: start, endDate: end });
+            await addTarget({ type: 'daily', label: 'Daily Target', targetValue: suggestedDaily, subjectId: null, startDate: start, endDate: end });
           }}>Accept</button>
         </div>
       )}

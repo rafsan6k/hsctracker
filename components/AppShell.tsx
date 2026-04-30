@@ -46,7 +46,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   // Loading state
-  if (loading || !user) {
+  if (loading || (user && !initialized)) {
     return (
       <div style={{
         minHeight: '100vh',
@@ -64,11 +64,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           }}>
             StudyFlow
           </h1>
-          <p style={{ color: '#958ea0', fontSize: 14 }}>Loading...</p>
+          <p style={{ color: '#958ea0', fontSize: 14 }}>Initializing your study space...</p>
         </div>
       </div>
     );
   }
+
+  if (!user) return null; // Should be handled by redirect, but safety first
 
   // Authenticated layout with sidebar
   return (

@@ -1,127 +1,138 @@
 -- ══════════════════════════════════════════════════════════════
--- StudyFlow Database Schema — Run this in Supabase SQL Editor
+-- StudyFlow Idempotent Schema — Safe to run multiple times
 -- ══════════════════════════════════════════════════════════════
 
 -- 1. Profiles (extends auth.users)
-create table public.profiles (
-  id uuid references auth.users on delete cascade primary key,
-  display_name text default 'Student',
-  exam_label text default '',
-  streak integer default 0,
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id uuid REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+  display_name text DEFAULT 'Student',
+  exam_label text DEFAULT '',
+  streak integer DEFAULT 0,
   last_active_date date,
-  created_at timestamp with time zone default now()
+  created_at timestamp with time zone DEFAULT now()
 );
 
 -- 2. Subjects
-create table public.subjects (
-  id uuid default gen_random_uuid() primary key,
-  user_id uuid references auth.users on delete cascade not null,
-  name text not null,
-  color text not null default '#8B5CF6',
-  icon text not null default 'school',
+CREATE TABLE IF NOT EXISTS public.subjects (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id uuid REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+  name text NOT NULL,
+  color text NOT NULL DEFAULT '#8B5CF6',
+  icon text NOT NULL DEFAULT 'school',
   exam_date date,
-  sort_order integer default 0,
-  created_at timestamp with time zone default now()
+  sort_order integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now()
 );
 
 -- 3. Chapters
-create table public.chapters (
-  id uuid default gen_random_uuid() primary key,
-  subject_id uuid references public.subjects on delete cascade not null,
-  user_id uuid references auth.users on delete cascade not null,
-  name text not null,
-  chapter_number integer not null default 1,
-  status text not null default 'not_started',
+CREATE TABLE IF NOT EXISTS public.chapters (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  subject_id uuid REFERENCES public.subjects ON DELETE CASCADE NOT NULL,
+  user_id uuid REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+  name text NOT NULL,
+  chapter_number integer NOT NULL DEFAULT 1,
+  status text NOT NULL DEFAULT 'not_started',
   completed_at timestamp with time zone,
-  sort_order integer default 0,
-  created_at timestamp with time zone default now()
+  sort_order integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now()
 );
 
 -- 4. Targets
-create table public.targets (
-  id uuid default gen_random_uuid() primary key,
-  user_id uuid references auth.users on delete cascade not null,
-  type text not null,
-  label text not null,
-  target_value integer not null,
-  subject_id uuid references public.subjects on delete set null,
-  start_date date not null,
-  end_date date not null,
-  created_at timestamp with time zone default now()
+CREATE TABLE IF NOT EXISTS public.targets (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id uuid REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+  type text NOT NULL,
+  label text NOT NULL,
+  target_value integer NOT NULL,
+  subject_id uuid REFERENCES public.subjects ON DELETE SET NULL,
+  start_date date NOT NULL,
+  end_date date NOT NULL,
+  created_at timestamp with time zone DEFAULT now()
 );
 
--- 5. Completion Logs
-create table public.completion_logs (
-  id uuid default gen_random_uuid() primary key,
-  chapter_id uuid references public.chapters on delete cascade not null,
-  user_id uuid references auth.users on delete cascade not null,
-  completed_at timestamp with time zone default now()
+-- 5. Completion Logs (for heatmaps/stats)
+CREATE TABLE IF NOT EXISTS public.completion_logs (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id uuid REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+  chapter_id uuid REFERENCES public.chapters ON DELETE CASCADE NOT NULL,
+  completed_at timestamp with time zone DEFAULT now()
 );
 
 -- 6. Badges
-create table public.badges (
-  id uuid default gen_random_uuid() primary key,
-  user_id uuid references auth.users on delete cascade not null,
-  badge_key text not null,
-  earned_at timestamp with time zone default now()
+CREATE TABLE IF NOT EXISTS public.badges (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id uuid REFERENCES auth.users ON DELETE CASCADE NOT NULL,
+  badge_key text NOT NULL,
+  earned_at timestamp with time zone DEFAULT now(),
+  UNIQUE(user_id, badge_key)
 );
 
 -- ══════════════════════════════════════════════════════════════
--- Row Level Security (RLS) — Each user can only access their own data
+-- ENABLE ROW LEVEL SECURITY
 -- ══════════════════════════════════════════════════════════════
 
-alter table public.profiles enable row level security;
-alter table public.subjects enable row level security;
-alter table public.chapters enable row level security;
-alter table public.targets enable row level security;
-alter table public.completion_logs enable row level security;
-alter table public.badges enable row level security;
-
--- Profiles
-create policy "Users can view own profile" on public.profiles for select using (auth.uid() = id);
-create policy "Users can update own profile" on public.profiles for update using (auth.uid() = id);
-create policy "Users can insert own profile" on public.profiles for insert with check (auth.uid() = id);
-
--- Subjects
-create policy "Users can view own subjects" on public.subjects for select using (auth.uid() = user_id);
-create policy "Users can insert own subjects" on public.subjects for insert with check (auth.uid() = user_id);
-create policy "Users can update own subjects" on public.subjects for update using (auth.uid() = user_id);
-create policy "Users can delete own subjects" on public.subjects for delete using (auth.uid() = user_id);
-
--- Chapters
-create policy "Users can view own chapters" on public.chapters for select using (auth.uid() = user_id);
-create policy "Users can insert own chapters" on public.chapters for insert with check (auth.uid() = user_id);
-create policy "Users can update own chapters" on public.chapters for update using (auth.uid() = user_id);
-create policy "Users can delete own chapters" on public.chapters for delete using (auth.uid() = user_id);
-
--- Targets
-create policy "Users can view own targets" on public.targets for select using (auth.uid() = user_id);
-create policy "Users can insert own targets" on public.targets for insert with check (auth.uid() = user_id);
-create policy "Users can update own targets" on public.targets for update using (auth.uid() = user_id);
-create policy "Users can delete own targets" on public.targets for delete using (auth.uid() = user_id);
-
--- Completion Logs
-create policy "Users can view own logs" on public.completion_logs for select using (auth.uid() = user_id);
-create policy "Users can insert own logs" on public.completion_logs for insert with check (auth.uid() = user_id);
-create policy "Users can delete own logs" on public.completion_logs for delete using (auth.uid() = user_id);
-
--- Badges
-create policy "Users can view own badges" on public.badges for select using (auth.uid() = user_id);
-create policy "Users can insert own badges" on public.badges for insert with check (auth.uid() = user_id);
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.subjects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.chapters ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.targets ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.completion_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.badges ENABLE ROW LEVEL SECURITY;
 
 -- ══════════════════════════════════════════════════════════════
--- Auto-create profile on signup
+-- RLS POLICIES (Idempotent using DO blocks)
 -- ══════════════════════════════════════════════════════════════
 
-create or replace function public.handle_new_user()
-returns trigger as $$
-begin
-  insert into public.profiles (id, display_name)
-  values (new.id, coalesce(new.raw_user_meta_data->>'display_name', 'Student'));
-  return new;
-end;
-$$ language plpgsql security definer;
+DO $$ 
+BEGIN
+    -- Profiles
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can view their own profile') THEN
+        CREATE POLICY "Users can view their own profile" ON public.profiles FOR SELECT USING (auth.uid() = id);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can update their own profile') THEN
+        CREATE POLICY "Users can update their own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
+    END IF;
 
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
+    -- Subjects
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can manage their own subjects') THEN
+        CREATE POLICY "Users can manage their own subjects" ON public.subjects FOR ALL USING (auth.uid() = user_id);
+    END IF;
+
+    -- Chapters
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can manage their own chapters') THEN
+        CREATE POLICY "Users can manage their own chapters" ON public.chapters FOR ALL USING (auth.uid() = user_id);
+    END IF;
+
+    -- Targets
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can manage their own targets') THEN
+        CREATE POLICY "Users can manage their own targets" ON public.targets FOR ALL USING (auth.uid() = user_id);
+    END IF;
+
+    -- Completion Logs
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can manage their own logs') THEN
+        CREATE POLICY "Users can manage their own logs" ON public.completion_logs FOR ALL USING (auth.uid() = user_id);
+    END IF;
+
+    -- Badges
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users can view their own badges') THEN
+        CREATE POLICY "Users can view their own badges" ON public.badges FOR SELECT USING (auth.uid() = user_id);
+    END IF;
+END $$;
+
+-- ══════════════════════════════════════════════════════════════
+-- AUTH TRIGGERS (Auto-create profile on signup)
+-- ══════════════════════════════════════════════════════════════
+
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.profiles (id, display_name)
+  VALUES (new.id, COALESCE(new.raw_user_meta_data->>'display_name', 'Student'));
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Drop trigger if it exists and recreate
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
