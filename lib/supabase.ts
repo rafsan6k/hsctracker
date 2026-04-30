@@ -5,9 +5,6 @@ export function createClient() {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
-    // Return a dummy client or throw a more descriptive error that won't crash the build if not used
-    // However, createBrowserClient REQUIRES these. 
-    // During build, we can return null if we handle it in getSupabase.
     return null;
   }
 
@@ -15,7 +12,7 @@ export function createClient() {
 }
 
 // Singleton for client components
-let client: ReturnType<typeof createBrowserClient> | null = null;
+let client: ReturnType<typeof createSupabaseClient> | null = null;
 
 export function getSupabase() {
   if (!client) {
