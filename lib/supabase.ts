@@ -12,7 +12,7 @@ export function createClient() {
 }
 
 // Singleton for client components
-let client: ReturnType<typeof createSupabaseClient> | null = null;
+let client: ReturnType<typeof createBrowserClient> | null = null;
 
 export function getSupabase() {
   if (!client) {
