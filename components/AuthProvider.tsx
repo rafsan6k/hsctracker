@@ -60,6 +60,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }, [supabase]);
 
   const signUp = useCallback(async (email: string, password: string, displayName: string) => {
+    if (!supabase) {
+    throw new Error('Supabase client not initialized');
+     }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
