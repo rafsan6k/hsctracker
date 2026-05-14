@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStudyStore } from '@/lib/store';
 import { useAuth } from './AuthProvider';
+import ThemeToggle from './ThemeToggle';
 
 const navItems = [
   { href: '/', icon: 'dashboard', label: 'Dashboard' },
@@ -27,9 +28,9 @@ export default function Sidebar() {
         left: 0,
         bottom: 0,
         width: 260,
-        background: 'rgba(15, 13, 21, 0.95)',
+        background: 'var(--color-panel-bg)',
         backdropFilter: 'blur(20px)',
-        borderRight: '1px solid rgba(255, 255, 255, 0.06)',
+        borderRight: '1px solid var(--color-panel-border)',
         display: 'flex',
         flexDirection: 'column',
         padding: '24px 16px',
@@ -94,7 +95,8 @@ export default function Sidebar() {
         </nav>
 
         {/* Profile & Logout */}
-        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <ThemeToggle className="sidebar-theme-toggle" />
           <Link href="/profile" className={`nav-link ${pathname === '/profile' ? 'active' : ''}`}>
             <div style={{
               width: 24,
@@ -142,6 +144,7 @@ export default function Sidebar() {
             {item.label}
           </Link>
         ))}
+        <ThemeToggle variant="icon" className="mobile-theme-toggle" />
         <Link
           href="/profile"
           className={`mobile-nav-link ${pathname === '/profile' ? 'active' : ''}`}
