@@ -30,6 +30,39 @@
   --font-sans: 'Manrope', system-ui, sans-serif;
 }
 
+/* ── Light Theme Overrides ──────────────────────────────── */
+:root[data-theme="light"] {
+  --color-bg-primary: #f7f7fb;
+  --color-bg-surface: #f0eff6;
+  --color-bg-card: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-hover: #f1eefc;
+  --color-bg-highlight: #e7e3f3;
+
+  --color-accent: #7c5cff;
+  --color-accent-dim: #5a3edb;
+  --color-accent-glow: rgba(124, 92, 255, 0.22);
+  --color-accent-light: #5b34ff;
+  --color-accent-container: #7c5cff;
+
+  --color-text-primary: #1c1b24;
+  --color-text-secondary: #555167;
+  --color-text-muted: #7d788b;
+  --color-border-subtle: rgba(20, 18, 32, 0.06);
+  --color-border-light: rgba(20, 18, 32, 0.12);
+}
+
+/* ── Panel Colors (Sidebar / Mobile Nav) ────────────────── */
+:root {
+  --color-panel-bg: rgba(15, 13, 21, 0.95);
+  --color-panel-border: rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="light"] {
+  --color-panel-bg: rgba(255, 255, 255, 0.85);
+  --color-panel-border: rgba(20, 18, 32, 0.08);
+}
+
 /* ── Base Styles ───────────────────────────────────────── */
 * {
   margin: 0;
@@ -388,10 +421,10 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(15, 13, 21, 0.95);
+  background: var(--color-panel-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--color-panel-border);
   padding: 8px 0;
   padding-bottom: env(safe-area-inset-bottom, 8px);
   z-index: 50;
@@ -439,7 +472,7 @@ body {
 /* ── Select Styles ─────────────────────────────────────── */
 select.input-field {
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23958ea0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23958ea0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 16px;
@@ -449,4 +482,90 @@ select.input-field {
 /* Transition utility */
 .transition-all-200 {
   transition: all 0.2s ease;
+}
+
+/* ── Theme Toggle ───────────────────────────────────────── */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  border-radius: 999px;
+  padding: 6px 12px 6px 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-border-light);
+  transform: translateY(-1px);
+}
+
+.theme-toggle__track {
+  width: 44px;
+  height: 26px;
+  background: var(--color-bg-hover);
+  border-radius: 999px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  transition: background 0.2s ease;
+}
+
+.theme-toggle__thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8B5CF6, #a078ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(0);
+  transition: transform 0.25s ease;
+}
+
+.theme-toggle__icon {
+  font-size: 14px;
+  color: white;
+}
+
+:root[data-theme="light"] .theme-toggle__thumb {
+  transform: translateX(18px);
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.theme-toggle__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.theme-toggle--icon {
+  padding: 6px;
+  gap: 0;
+  border-radius: 12px;
+}
+
+.theme-toggle--icon .theme-toggle__track {
+  width: 38px;
+}
+
+.mobile-theme-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border: none;
+  background: none;
+  padding: 6px 12px;
+}
+
+.mobile-theme-toggle .theme-toggle__label {
+  display: none;
 }
