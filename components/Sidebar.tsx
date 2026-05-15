@@ -136,18 +136,18 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* Mobile Bottom Bar */}
-      <nav className="mobile-nav">
+      {/* Mobile Top Bar */}
+      <div className="mobile-top-bar">
         <button
           type="button"
-          className="mobile-nav-link"
+          className="mobile-top-bar__menu"
           onClick={() => setMobileOpen(true)}
           aria-label="Open menu"
         >
           <span className="material-symbols-rounded">menu</span>
-          Menu
         </button>
-      </nav>
+        <span className="mobile-top-bar__title">StudyFlow</span>
+      </div>
 
       {/* Mobile Menu Drawer */}
       <div
