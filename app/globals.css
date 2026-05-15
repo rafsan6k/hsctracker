@@ -45,11 +45,11 @@
   --color-accent-light: #4f2fe6;
   --color-accent-container: #6f4dff;
 
-  --color-text-primary: #1b1a24;
-  --color-text-secondary: #4e4a63;
-  --color-text-muted: #6e6883;
-  --color-border-subtle: rgba(27, 26, 36, 0.08);
-  --color-border-light: rgba(27, 26, 36, 0.14);
+  --color-text-primary: #111111;
+  --color-text-secondary: #111111;
+  --color-text-muted: #111111;
+  --color-border-subtle: rgba(17, 17, 17, 0.08);
+  --color-border-light: rgba(17, 17, 17, 0.14);
 }
 
 /* ── Panel Colors (Sidebar / Mobile Nav) ────────────────── */
@@ -143,12 +143,12 @@ body {
 :root[data-theme="light"] .glass-card,
 :root[data-theme="light"] .glass-card-static {
   background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(27, 26, 36, 0.1);
+  border: 1px solid rgba(17, 17, 17, 0.1);
 }
 
 :root[data-theme="light"] .glass-card:hover {
   background: rgba(248, 247, 252, 0.95);
-  border-color: rgba(27, 26, 36, 0.16);
+  border-color: rgba(17, 17, 17, 0.16);
 }
 
 /* ── Progress Ring ─────────────────────────────────────── */
