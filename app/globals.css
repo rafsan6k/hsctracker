@@ -618,3 +618,47 @@ select.input-field {
   gap: 6px;
   margin-top: 16px;
 }
+
+/* ── Mobile Top Bar ───────────────────────────────────── */
+.mobile-top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  background: var(--color-panel-bg);
+  border-bottom: 1px solid var(--color-panel-border);
+  backdrop-filter: blur(20px);
+  z-index: 60;
+}
+
+.mobile-top-bar__menu {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--color-bg-hover);
+  border: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.mobile-top-bar__title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .mobile-top-bar {
+    display: flex;
+  }
+  .main-content {
+    padding-top: 72px !important;
+  }
+}
