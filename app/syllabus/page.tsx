@@ -211,4 +211,77 @@ export default function SyllabusPage() {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>{
+            <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>{editId ? 'Edit Subject' : 'New Subject'}</h2>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div>
+                <label style={{ display: 'block', fontSize: 13, color: 'var(--color-text-secondary)', marginBottom: 8 }}>Subject Name</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  placeholder="e.g. Physics, Math..."
+                  value={fName}
+                  onChange={(e) => setFName(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 13, color: 'var(--color-text-secondary)', marginBottom: 8 }}>Color Theme</label>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {SUBJECT_COLORS.map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => setFColor(color)}
+                      style={{
+                        width: 32, height: 32, borderRadius: 16, background: color,
+                        border: fColor === color ? '2px solid var(--color-text-primary)' : '2px solid transparent',
+                        cursor: 'pointer', transition: 'all 0.2s'
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 13, color: 'var(--color-text-secondary)', marginBottom: 8 }}>Icon</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 8 }}>
+                  {SUBJECT_ICONS.map((icon) => (
+                    <button
+                      key={icon.key}
+                      onClick={() => setFIcon(icon.key)}
+                      style={{
+                        height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: fIcon === icon.key ? 'rgba(139, 92, 246, 0.2)' : 'var(--color-bg-hover)',
+                        border: `1px solid ${fIcon === icon.key ? 'var(--color-accent)' : 'transparent'}`,
+                        color: fIcon === icon.key ? 'var(--color-accent-light)' : 'var(--color-text-secondary)',
+                        cursor: 'pointer', transition: 'all 0.2s'
+                      }}
+                      title={icon.label}
+                    >
+                      <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{icon.key}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 13, color: 'var(--color-text-secondary)', marginBottom: 8 }}>Exam Date (Optional)</label>
+                <input
+                  type="date"
+                  className="input-field"
+                  value={fDate}
+                  onChange={(e) => setFDate(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 24 }}>
+              <button className="btn-ghost" onClick={() => setShowModal(false)}>Cancel</button>
+              <button className="btn-primary" onClick={handleSaveSubject}>Save Subject</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
