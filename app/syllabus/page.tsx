@@ -68,8 +68,8 @@ export default function SyllabusPage() {
     <div className="animate-fade-up">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 700, color: '#e7e0ed', marginBottom: 4 }}>Syllabus Manager</h1>
-          <p style={{ color: '#958ea0', fontSize: 14 }}>Organize your subjects and track chapter progress.</p>
+          <h1 style={{ fontSize: 28, fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 4 }}>Syllabus Manager</h1>
+          <p style={{ color: 'var(--color-text-secondary)', fontSize: 14 }}>Organize your subjects and track chapter progress.</p>
         </div>
         <button
           className="btn-primary"
@@ -83,9 +83,9 @@ export default function SyllabusPage() {
 
       {subjects.length === 0 ? (
         <div className="glass-card" style={{ padding: 48, textAlign: 'center', borderStyle: 'dashed' }}>
-          <span className="material-symbols-rounded" style={{ fontSize: 48, color: '#6b6578', marginBottom: 16 }}>library_books</span>
-          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#e7e0ed', marginBottom: 8 }}>No Subjects Yet</h3>
-          <p style={{ color: '#958ea0', fontSize: 14, marginBottom: 24 }}>Get started by adding your first subject to track.</p>
+          <span className="material-symbols-rounded" style={{ fontSize: 48, color: 'var(--color-text-muted)', marginBottom: 16 }}>library_books</span>
+          <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 8 }}>No Subjects Yet</h3>
+          <p style={{ color: 'var(--color-text-secondary)', fontSize: 14, marginBottom: 24 }}>Get started by adding your first subject to track.</p>
           <button className="btn-ghost" onClick={() => { resetModal(); setShowModal(true); }}>
             Add Subject
           </button>
@@ -112,19 +112,19 @@ export default function SyllabusPage() {
                   
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 4 }}>
-                      <h3 style={{ fontSize: 18, fontWeight: 600, color: '#e7e0ed' }}>{subject.name}</h3>
+                      <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--color-text-primary)' }}>{subject.name}</h3>
                       {subject.examDate && (
-                        <span style={{ fontSize: 12, padding: '2px 8px', borderRadius: 100, background: 'rgba(255,255,255,0.05)', color: '#958ea0' }}>
+                        <span style={{ fontSize: 12, padding: '2px 8px', borderRadius: 100, background: 'var(--color-bg-hover)', color: 'var(--color-text-secondary)' }}>
                           Exam: {new Date(subject.examDate).toLocaleDateString()}
                         </span>
                       )}
                     </div>
                     
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{ flex: 1, height: 6, background: 'rgba(255,255,255,0.05)', borderRadius: 3, overflow: 'hidden' }}>
+                      <div style={{ flex: 1, height: 6, background: 'var(--color-bg-highlight)', borderRadius: 3, overflow: 'hidden' }}>
                         <div style={{ height: '100%', background: subject.color, width: `${progress.percentage}%`, transition: 'width 0.5s ease' }} />
                       </div>
-                      <span style={{ fontSize: 13, color: '#958ea0', fontWeight: 500, width: 40, textAlign: 'right' }}>
+                      <span style={{ fontSize: 13, color: 'var(--color-text-secondary)', fontWeight: 500, width: 40, textAlign: 'right' }}>
                         {progress.percentage}%
                       </span>
                     </div>
@@ -137,27 +137,27 @@ export default function SyllabusPage() {
                   >
                     <span className="material-symbols-rounded" style={{ fontSize: 18 }}>edit</span>
                   </button>
-                  <span className="material-symbols-rounded" style={{ color: '#6b6578', transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+                  <span className="material-symbols-rounded" style={{ color: 'var(--color-text-muted)', transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
                     expand_more
                   </span>
                 </div>
 
                 {isExpanded && (
-                  <div style={{ padding: '0 24px 24px 24px', borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: 8, paddingTop: 16 }}>
+                  <div style={{ padding: '0 24px 24px 24px', borderTop: '1px solid var(--color-border-subtle)', marginTop: 8, paddingTop: 16 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                       {subjectChapters.map((ch) => {
                         const isCompleted = ch.status === 'completed';
                         return (
                           <div key={ch.id} style={{
                             display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px',
-                            background: 'rgba(255,255,255,0.02)', borderRadius: 10,
+                            background: 'var(--color-bg-surface)', borderRadius: 10,
                             borderLeft: `3px solid ${isCompleted ? '#10B981' : 'transparent'}`,
                             transition: 'all 0.2s ease'
                           }}>
                             <button
                               onClick={() => toggleChapterComplete(ch.id)}
                               style={{
-                                width: 22, height: 22, borderRadius: 6, border: `2px solid ${isCompleted ? '#10B981' : 'rgba(255,255,255,0.2)'}`,
+                                width: 22, height: 22, borderRadius: 6, border: `2px solid ${isCompleted ? '#10B981' : 'var(--color-border-light)'}`,
                                 background: isCompleted ? '#10B981' : 'transparent',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
                                 transition: 'all 0.2s ease'
@@ -166,7 +166,7 @@ export default function SyllabusPage() {
                               {isCompleted && <span className="material-symbols-rounded" style={{ fontSize: 14, color: 'white' }}>check</span>}
                             </button>
                             <span style={{
-                              flex: 1, fontSize: 15, color: isCompleted ? '#958ea0' : '#e7e0ed',
+                              flex: 1, fontSize: 15, color: isCompleted ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
                               textDecoration: isCompleted ? 'line-through' : 'none', transition: 'all 0.2s ease'
                             }}>
                               {ch.name}
@@ -211,77 +211,4 @@ export default function SyllabusPage() {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>{editId ? 'Edit Subject' : 'New Subject'}</h2>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div>
-                <label style={{ display: 'block', fontSize: 13, color: '#958ea0', marginBottom: 8 }}>Subject Name</label>
-                <input
-                  type="text"
-                  className="input-field"
-                  placeholder="e.g. Physics, Math..."
-                  value={fName}
-                  onChange={(e) => setFName(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: 13, color: '#958ea0', marginBottom: 8 }}>Color Theme</label>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {SUBJECT_COLORS.map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setFColor(color)}
-                      style={{
-                        width: 32, height: 32, borderRadius: 16, background: color,
-                        border: fColor === color ? '2px solid white' : '2px solid transparent',
-                        cursor: 'pointer', transition: 'all 0.2s'
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: 13, color: '#958ea0', marginBottom: 8 }}>Icon</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 8 }}>
-                  {SUBJECT_ICONS.map((icon) => (
-                    <button
-                      key={icon.key}
-                      onClick={() => setFIcon(icon.key)}
-                      style={{
-                        height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: fIcon === icon.key ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${fIcon === icon.key ? 'var(--color-accent)' : 'transparent'}`,
-                        color: fIcon === icon.key ? 'var(--color-accent-light)' : '#958ea0',
-                        cursor: 'pointer', transition: 'all 0.2s'
-                      }}
-                      title={icon.label}
-                    >
-                      <span className="material-symbols-rounded" style={{ fontSize: 20 }}>{icon.key}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: 13, color: '#958ea0', marginBottom: 8 }}>Exam Date (Optional)</label>
-                <input
-                  type="date"
-                  className="input-field"
-                  value={fDate}
-                  onChange={(e) => setFDate(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 24 }}>
-              <button className="btn-ghost" onClick={() => setShowModal(false)}>Cancel</button>
-              <button className="btn-primary" onClick={handleSaveSubject}>Save Subject</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+            <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>{
