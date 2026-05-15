@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import { useStudyStore } from '@/lib/store';
 import { useAuth } from './AuthProvider';
 import ThemeToggle from './ThemeToggle';
@@ -18,6 +19,9 @@ export default function Sidebar() {
   const profile = useStudyStore((s) => s.profile);
   const streak = useStudyStore((s) => s.streak);
   const { signOut } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const closeMobile = () => setMobileOpen(false);
 
   return (
     <>
@@ -132,35 +136,85 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* Mobile Bottom Nav */}
+      {/* Mobile Bottom Bar */}
       <nav className="mobile-nav">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`mobile-nav-link ${pathname === item.href ? 'active' : ''}`}
-          >
-            <span className="material-symbols-rounded">{item.icon}</span>
-            {item.label}
-          </Link>
-        ))}
-        <ThemeToggle variant="icon" className="mobile-theme-toggle" />
-        <Link
-          href="/profile"
-          className={`mobile-nav-link ${pathname === '/profile' ? 'active' : ''}`}
-        >
-          <span className="material-symbols-rounded">person</span>
-          Profile
-        </Link>
-        <button 
-          onClick={() => signOut()}
+        <button
+          type="button"
           className="mobile-nav-link"
-          style={{ background: 'none', border: 'none', color: '#ef4444' }}
+          onClick={() => setMobileOpen(true)}
+          aria-label="Open menu"
         >
-          <span className="material-symbols-rounded">logout</span>
-          Exit
+          <span className="material-symbols-rounded">menu</span>
+          Menu
         </button>
       </nav>
+
+      {/* Mobile Menu Drawer */}
+      <div
+        className={`mobile-menu-overlay ${mobileOpen ? 'open' : ''}`}
+        onClick={closeMobile}
+      >
+        <div
+          className={`mobile-menu ${mobileOpen ? 'open' : ''}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontSize: 16, fontWeight: 700 }}>Menu</div>
+              <div style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>{profile.displayName}</div>
+            </div>
+            <button
+              type="button"
+              className="mobile-menu-close"
+              onClick={closeMobile}
+              aria-label="Close menu"
+            >
+              <span className="material-symbols-rounded">close</span>
+            </button>
+          </div>
+
+          <div className="mobile-menu-links">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`nav-link ${pathname === item.href ? 'active' : ''}`}
+                onClick={closeMobile}
+              >
+                <span className="material-symbols-rounded">{item.icon}</span>
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              href="/profile"
+              className={`nav-link ${pathname === '/profile' ? 'active' : ''}`}
+              onClick={closeMobile}
+            >
+              <span className="material-symbols-rounded">person</span>
+              Profile
+            </Link>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
+            <ThemeToggle className="sidebar-theme-toggle" />
+            <button 
+              onClick={() => { signOut(); closeMobile(); }}
+              className="nav-link" 
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                cursor: 'pointer', 
+                width: '100%', 
+                textAlign: 'left',
+                color: '#ef4444' 
+              }}
+            >
+              <span className="material-symbols-rounded">logout</span>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
