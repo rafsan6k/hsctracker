@@ -279,6 +279,17 @@ body {
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.2s ease;
+  overflow: hidden;
+}
+
+.modal-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 7, 12, 0.45);
+  backdrop-filter: blur(24px) saturate(1.35);
+  -webkit-backdrop-filter: blur(24px) saturate(1.35);
+  z-index: 0;
 }
 
 :root[data-theme="light"] .modal-overlay {
@@ -287,7 +298,15 @@ body {
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
 }
 
+:root[data-theme="light"] .modal-overlay::before {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+}
+
 .modal-content {
+  position: relative;
+  z-index: 1;
   background: var(--color-bg-elevated);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
