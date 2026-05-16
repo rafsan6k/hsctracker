@@ -211,8 +211,10 @@ export default function SyllabusPage() {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>{editId ? 'Edit Subject' : 'New Subject'}</h2>
-            
+            <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>
+              {editId ? 'Edit Subject' : 'New Subject'}
+            </h2>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 13, color: 'var(--color-text-secondary)', marginBottom: 8 }}>Subject Name</label>
