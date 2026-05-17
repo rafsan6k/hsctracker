@@ -117,7 +117,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Glass Card ────────────────────────────────────────── */
+/* ── Glass Card ───────────────────────────────��────────── */
 .glass-card {
   background: rgba(29, 26, 35, 0.7);
   backdrop-filter: blur(20px);
