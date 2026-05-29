@@ -52,8 +52,8 @@ export default function Page() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Welcome</h1>
-      <p>{user.email}</p>
+      <h1>Welcome to Syllabus</h1>
+      <p>Logged in as: {user.email}</p>
     </div>
   );
 }
