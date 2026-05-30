@@ -1,12 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import AppShell from "@/components/AppShell";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
-  title: "StudyFlow — Smart Study Tracker",
-  description: "Take full control of your academic preparation. Track your syllabus, mark daily progress, set targets, and watch your completion grow.",
+  title: "StudyFlow",
+  description: "StudyFlow",
+  manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0f0d15",
 };
 
 export default function RootLayout({
@@ -23,6 +28,16 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet" />
+   
+  
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black"
+    />
+  
+  
       </head>
       <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <AuthProvider>
