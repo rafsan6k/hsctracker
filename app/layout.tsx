@@ -5,7 +5,7 @@ import AppShell from "@/components/AppShell";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import InstallButton from "@/components/InstallButton";
 import InstallBottomSheet from "@/components/InstallBottomSheet";
-
+import InstallPrompt from "@/components/InstallPrompt";
 
 
 export const metadata: Metadata = {
@@ -50,6 +50,7 @@ export default function RootLayout({
         <GoogleAnalytics gaId="G-PJLNM14C58"/>
         <InstallBottomSheet />
         <InstallButton />
+        <InstallPrompt />
       </body>
     </html>
   );
