@@ -20,6 +20,10 @@ export default function InstallBottomSheet() {
   }, []);
 
   useEffect(() => {
+    window.dispatchEvent(new CustomEvent("pwa-sheet-open", { detail: open }));
+  }, [open]);
+
+  useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);

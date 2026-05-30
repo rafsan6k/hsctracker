@@ -13,24 +13,23 @@ export default function InstallWidget() {
     useState<BeforeInstallPromptEvent | null>(null);
 
   const [open, setOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
-  // check if user already dismissed
+  // Listen to sheet open event from InstallBottomSheet
   useEffect(() => {
-    const dismissed = localStorage.getItem("install-dismissed");
-    if (dismissed) setHidden(true);
+    const handleSheetOpen = (e: Event) => {
+      setSheetOpen((e as CustomEvent).detail);
+    };
+    window.addEventListener("pwa-sheet-open", handleSheetOpen as EventListener);
+    return () => {
+      window.removeEventListener("pwa-sheet-open", handleSheetOpen as EventListener);
+    };
   }, []);
 
   useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-
-      // auto show after slight delay (feels like native apps)
-      setTimeout(() => {
-        const dismissed = localStorage.getItem("install-dismissed");
-        if (!dismissed) setOpen(true);
-      }, 3000);
     };
 
     window.addEventListener("beforeinstallprompt", handler as EventListener);
@@ -54,11 +53,9 @@ export default function InstallWidget() {
 
   const dismiss = () => {
     setOpen(false);
-    setHidden(true);
-    localStorage.setItem("install-dismissed", "true");
   };
 
-  if (hidden || !deferredPrompt) return null;
+  if (sheetOpen || !deferredPrompt) return null;
 
   return (
     <>
