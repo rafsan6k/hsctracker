@@ -3,6 +3,7 @@ import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import AppShell from "@/components/AppShell";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import InstallButton from "@/components/InstallButton";
 
 export const metadata: Metadata = {
   title: "StudyFlow",
@@ -44,6 +45,7 @@ export default function RootLayout({
           <AppShell>{children}</AppShell>
         </AuthProvider>
         <GoogleAnalytics gaId="G-PJLNM14C58"/>
+        <InstallButton />
       </body>
     </html>
   );
