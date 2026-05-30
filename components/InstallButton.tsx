@@ -8,76 +8,122 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: string }>;
 }
 
-export default function InstallButton() {
+export default function InstallWidget() {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
 
-  const [visible, setVisible] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+
+  // check if user already dismissed
+  useEffect(() => {
+    const dismissed = localStorage.getItem("install-dismissed");
+    if (dismissed) setHidden(true);
+  }, []);
 
   useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
+
+      // auto show after slight delay (feels like native apps)
+      setTimeout(() => {
+        const dismissed = localStorage.getItem("install-dismissed");
+        if (!dismissed) setOpen(true);
+      }, 3000);
     };
 
-    window.addEventListener(
-      "beforeinstallprompt",
-      handler as EventListener
-    );
+    window.addEventListener("beforeinstallprompt", handler as EventListener);
 
-    return () => {
+    return () =>
       window.removeEventListener(
         "beforeinstallprompt",
         handler as EventListener
       );
-    };
   }, []);
 
-  const handleInstallClick = async () => {
+  const installApp = async () => {
     if (!deferredPrompt) return;
 
     await deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
 
-    const result = await deferredPrompt.userChoice;
-
-    console.log(result.outcome);
-
+    setOpen(false);
     setDeferredPrompt(null);
-    setVisible(false);
   };
 
-  if (!deferredPrompt || !visible) return null;
+  const dismiss = () => {
+    setOpen(false);
+    setHidden(true);
+    localStorage.setItem("install-dismissed", "true");
+  };
+
+  if (hidden || !deferredPrompt) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 animate-in fade-in slide-in-from-bottom-5">
-      <div className="relative bg-black text-white rounded-2xl shadow-2xl px-4 py-3 w-[260px] border border-white/10">
-        
-        {/* Close Button */}
+    <>
+      {/* Floating Circle (WhatsApp-style launcher) */}
+      {!open && (
         <button
-          onClick={() => setVisible(false)}
-          className="absolute top-2 right-2 text-white/70 hover:text-white"
+          onClick={() => setOpen(true)}
+          className="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full bg-black text-white shadow-xl flex items-center justify-center animate-bounce"
         >
-          <X size={18} />
+          ⬇
         </button>
+      )}
 
-        {/* Content */}
-        <div className="pr-5">
-          <h3 className="font-semibold text-sm">
-            Install App
-          </h3>
+      {/* Slide-up Card */}
+      {open && (
+        <div className="fixed bottom-5 right-5 z-50 w-[280px]">
+          <div className="bg-black text-white rounded-2xl shadow-2xl border border-white/10 p-4 animate-[slideUp_0.25s_ease-out]">
+            
+            {/* Header */}
+            <div className="flex justify-between items-center">
+              <h3 className="font-semibold text-sm">Install App</h3>
 
-          <p className="text-xs text-white/70 mt-1">
-            Install for faster access and app-like experience.
-          </p>
+              <button onClick={dismiss}>
+                <X size={18} className="opacity-70 hover:opacity-100" />
+              </button>
+            </div>
 
-          <button
-            onClick={handleInstallClick}
-            className="mt-3 w-full bg-white text-black rounded-xl py-2 text-sm font-medium hover:opacity-90 transition"
-          >
-            Install Now
-          </button>
+            {/* Text */}
+            <p className="text-xs text-white/70 mt-2">
+              Get faster access and a smoother app-like experience.
+            </p>
+
+            {/* Buttons */}
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={installApp}
+                className="flex-1 bg-white text-black text-sm py-2 rounded-xl font-medium"
+              >
+                Install
+              </button>
+
+              <button
+                onClick={dismiss}
+                className="flex-1 bg-white/10 text-white text-sm py-2 rounded-xl"
+              >
+                Not now
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+
+      {/* Animation */}
+      <style>{`
+        @keyframes slideUp {
+          from {
+            transform: translateY(40px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
+    </>
   );
 }
